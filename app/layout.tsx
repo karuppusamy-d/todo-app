@@ -1,10 +1,9 @@
-import Navbar from "@/components/Navbar";
-import "./globals.css";
-import { siteConfig } from "@/components/config/site.config";
 import { Metadata } from "next";
+import { siteConfig } from "@/components/config/site.config";
 import { AuthProvider } from "@/components/contexts/useAuthContext";
-import Footer from "@/components/Footer";
 import LayoutWrapper from "@/components/LayoutWrapper";
+import ThemeProvider from "@/components/contexts/ThemeProvider";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: siteConfig.title,
@@ -22,7 +21,9 @@ export default function RootLayout({
         className={`${siteConfig.fontSans.variable} bg-white text-black antialiased dark:bg-black dark:text-white`}
       >
         <AuthProvider>
-          <LayoutWrapper>{children}</LayoutWrapper>
+          <ThemeProvider>
+            <LayoutWrapper>{children}</LayoutWrapper>
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>
