@@ -58,6 +58,7 @@ const AuthProvider: AuthProviderType = ({ children }) => {
   };
 
   const logout = async () => {
+    setCurrentUser(null);
     return true;
   };
 

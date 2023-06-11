@@ -1,17 +1,13 @@
-import { Poppins } from "next/font/google";
+import Navbar from "@/components/Navbar";
 import "./globals.css";
+import { siteConfig } from "@/components/config/site.config";
+import { Metadata } from "next";
+import { AuthProvider } from "@/components/contexts/useAuthContext";
+import Footer from "@/components/Footer";
 
-const fontSans = Poppins({
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-});
-
-export const metadata = {
-  title: "Todo App",
-  description:
-    "The ultimate todo app that helps you stay organized and accomplish more. With its sleek and user-friendly interface, Todo App allows you to effortlessly create and manage your tasks",
+export const metadata: Metadata = {
+  title: siteConfig.title,
+  description: siteConfig.description,
 };
 
 export default function RootLayout({
@@ -22,9 +18,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fontSans.variable} bg-white text-black antialiased dark:bg-black dark:text-white`}
+        className={`${siteConfig.fontSans.variable} bg-white text-black antialiased dark:bg-black dark:text-white`}
       >
-        {children}
+        <AuthProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );
