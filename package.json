@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write ./"
+    "format": "prettier --write ./",
+    "emulator": "firebase emulators:start -c firebase.json --import=./firebase-export",
+    "emulator:export": "firebase emulators:export ./firebase-export -c firebase.json"
   },
   "dependencies": {
     "@types/node": "20.3.0",
