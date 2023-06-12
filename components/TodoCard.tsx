@@ -1,13 +1,18 @@
 import React, { ReactElement, useState } from "react";
-import { WithSubTodo } from "./types/todo";
+import { TodoWithId } from "./types/todo";
 import Icon from "./Icons";
+import { useTodoContext } from "./contexts/useTodoContext";
 
 type Props = {
-  todo: WithSubTodo;
+  todo: TodoWithId;
   innerTodo?: boolean;
 };
 
 const TodoCard = ({ todo, innerTodo }: Props): ReactElement => {
+  const { deleteTodo } = useTodoContext();
+  const handleDelete = () => {
+    if (!innerTodo) deleteTodo(todo);
+  };
   return (
     <div
       className={`rounded-lg shadow-light dark:shadow-cardDark ${
@@ -22,16 +27,16 @@ const TodoCard = ({ todo, innerTodo }: Props): ReactElement => {
           <button aria-label="completed" title="completed">
             <Icon
               className="text-green-300"
-              kind={todo.completed ? "complete" : "completeFilled"}
+              kind={todo.completed ? "completeFilled" : "complete"}
             />
           </button>
           <button aria-label="important" title="important">
             <Icon
               className="text-amber-300"
-              kind={todo.important ? "star" : "starFilled"}
+              kind={todo.important ? "starFilled" : "star"}
             />
           </button>
-          <button aria-label="delete" title="delete">
+          <button aria-label="delete" title="delete" onClick={handleDelete}>
             <Icon className="text-red-400" kind={"delete"} />
           </button>
         </div>
@@ -43,8 +48,14 @@ const TodoCard = ({ todo, innerTodo }: Props): ReactElement => {
 
       {!innerTodo && todo.subTodos && todo.subTodos?.length > 0 && (
         <div className="flex flex-col gap-4 pt-6">
-          {todo.subTodos.map((todo, i) => {
-            return <TodoCard key={i} todo={todo} innerTodo />;
+          {todo.subTodos.map((currentTodo, i) => {
+            return (
+              <TodoCard
+                key={i}
+                todo={{ ...currentTodo, id: todo.id, uid: todo.uid }}
+                innerTodo
+              />
+            );
           })}
         </div>
       )}
