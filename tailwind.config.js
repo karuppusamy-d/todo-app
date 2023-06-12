@@ -21,7 +21,8 @@ module.exports = {
       boxShadow: {
         light: "0 0 12px 0 rgba(0, 0, 0, 0.09)",
         "light-lg": "0 2px 20px 0 rgba(0, 0, 0, 0.09)",
-        dark: "0 1px 1px 0 rgba(75, 85, 99, 0.3)",
+        dark: "0 1px 1px 0 rgba(75, 85, 99, 0.6)",
+        cardDark: "0 0 5px 1px rgba(75, 85, 99, 0.6)",
       },
     },
   },
