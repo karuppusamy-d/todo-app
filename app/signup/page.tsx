@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/components/contexts/useAuthContext";
 import { ApiErrorResponse } from "@/components/types/ApiErrorResponse";
 
-const Login = (): ReactElement => {
+const Signup = (): ReactElement => {
   const router = useRouter();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const passwordConfirmRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState({ type: "", message: "" });
-  const { currentUser, login } = useAuthContext();
+  const { currentUser, signup } = useAuthContext();
 
   useEffect(() => {
     // Redirect if user is already logged in
@@ -40,12 +41,16 @@ const Login = (): ReactElement => {
     setError({ type: ele.id, message });
   };
 
-  // Function to handle login form submit
-  async function handleLogin(e: FormEvent<HTMLFormElement>): Promise<void> {
+  // Function to handle signup form submit
+  async function handleSignup(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
 
     // Check if email and password are not empty
-    if (!emailRef.current || !passwordRef.current)
+    if (
+      !emailRef.current ||
+      !passwordRef.current ||
+      !passwordConfirmRef.current
+    )
       return alert("Something went wrong");
 
     // Reset error
@@ -55,9 +60,17 @@ const Login = (): ReactElement => {
       // Get email and password
       const email = emailRef.current.value;
       const password = passwordRef.current.value;
+      const passwordConfirm = passwordConfirmRef.current.value;
 
-      // Login with email and password
-      await login(email, password);
+      // Check if password and passwordConfirm are equal
+      if (password !== passwordConfirm)
+        return handleError(
+          passwordConfirmRef.current,
+          "Passwords didn’t match"
+        );
+
+      // Signup with email and password
+      await signup(email, password);
     } catch (err) {
       // Handle error
       handleAxiosError(err as AxiosError<ApiErrorResponse>);
@@ -65,7 +78,11 @@ const Login = (): ReactElement => {
   }
 
   const handleAxiosError = (err: AxiosError<ApiErrorResponse>): void => {
-    if (!emailRef.current || !passwordRef.current)
+    if (
+      !emailRef.current ||
+      !passwordRef.current ||
+      !passwordConfirmRef.current
+    )
       return alert("Something went wrong");
 
     const response = err.response?.data;
@@ -74,8 +91,10 @@ const Login = (): ReactElement => {
       const error = response.errors[0];
       if (error.path == "email") {
         handleError(emailRef.current, error.message);
-      } else {
+      } else if (error.path == "password") {
         handleError(passwordRef.current, error.message);
+      } else {
+        handleError(passwordConfirmRef.current, error.message);
       }
     }
   };
@@ -83,10 +102,10 @@ const Login = (): ReactElement => {
   return (
     <div className="py-20 min-h-[80vh]">
       <div className="p-8 sm:p-14 max-w-md sm:max-w-md m-auto rounded-lg shadow-light dark:shadow-cardDark">
-        {/* Login form */}
-        <form className="flex flex-col" onSubmit={handleLogin}>
+        {/* Signup form */}
+        <form className="flex flex-col" onSubmit={handleSignup}>
           <h2 className="text-primary-400 dark:text-gray-100 text-center text-3xl font-bold mb-8">
-            Login
+            Signup
           </h2>
 
           {/* Email Input */}
@@ -118,7 +137,7 @@ const Login = (): ReactElement => {
             id="password"
             ref={passwordRef}
             type="password"
-            autoComplete="current-password"
+            autoComplete="new-password"
             required
             minLength={8}
           />
@@ -129,10 +148,33 @@ const Login = (): ReactElement => {
               {error.message}
             </div>
           )}
+          {/* Password Confirm Input */}
+          <label
+            className="font-semibold text-xs mt-6"
+            htmlFor="passwordConfirm"
+          >
+            Password Confirm
+          </label>
+          <input
+            className="input"
+            id="passwordConfirm"
+            ref={passwordConfirmRef}
+            type="password"
+            autoComplete="new-password"
+            required
+            minLength={8}
+          />
 
-          {/* Login Button */}
+          {/* Password confirm error message */}
+          {error.type == "passwordConfirm" && (
+            <div className="mt-3 text-xs font-medium text-red-500 dark:text-red-400">
+              {error.message}
+            </div>
+          )}
+
+          {/* Signup Button */}
           <button className="btn h-10 mt-8 rounded" type="submit">
-            Login
+            Signup
           </button>
         </form>
 
@@ -158,4 +200,4 @@ const Login = (): ReactElement => {
   );
 };
 
-export default Login;
+export default Signup;
