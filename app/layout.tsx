@@ -3,6 +3,7 @@ import { siteConfig } from "@/components/config/site.config";
 import { AuthProvider } from "@/components/contexts/useAuthContext";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import ThemeProvider from "@/components/contexts/ThemeProvider";
+import { TodoProvider } from "@/components/contexts/useTodoContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,7 +23,9 @@ export default function RootLayout({
       >
         <AuthProvider>
           <ThemeProvider>
-            <LayoutWrapper>{children}</LayoutWrapper>
+            <TodoProvider>
+              <LayoutWrapper>{children}</LayoutWrapper>
+            </TodoProvider>
           </ThemeProvider>
         </AuthProvider>
       </body>
