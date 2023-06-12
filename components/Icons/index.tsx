@@ -1,12 +1,16 @@
 import { DetailedHTMLProps, HTMLAttributes, ReactElement } from "react";
-import dropdownArrow from "./dropdown-arrow.svg";
+import downArrow from "./dropdown-arrow.svg";
+import close from "./close.svg";
+import remove from "./remove.svg";
 import star from "./star.svg";
 import starFilled from "./star-filled.svg";
 import complete from "./complete.svg";
 import completeFilled from "./complete-filled.svg";
 
 const components = {
-  dropdownArrow: dropdownArrow,
+  downArrow: downArrow,
+  close: close,
+  delete: remove,
   star: star,
   starFilled: starFilled,
   complete: complete,
