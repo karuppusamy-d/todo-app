@@ -16,7 +16,7 @@ type ResponseData = {
 export const validateUserAccount = async (
   email: string,
   password: string
-): Promise<string | null> => {
+): Promise<ResponseData | null> => {
   const apiKey = process.env.FIREBASE_API_KEY;
 
   // https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=
@@ -34,9 +34,7 @@ export const validateUserAccount = async (
   );
 
   if (parseInt(response.status.toString()) === 200) {
-    const userId = response.data.localId ?? null;
-
-    return userId;
+    if (response.data.localId) return response.data;
   }
 
   return null;
