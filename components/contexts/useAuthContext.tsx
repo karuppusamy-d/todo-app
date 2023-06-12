@@ -7,19 +7,19 @@ import {
   createContext,
   useEffect,
 } from "react";
+import axios, { AxiosResponse } from "axios";
+import { decode } from "jsonwebtoken";
+import { User, UserJWT } from "../types/user";
+import * as db from "@/utils/indexedDB";
 
 // Type definitions for useAuthContext
-type User = {
-  name: string;
-  photoURL: string;
-};
 type AuthProviderType = ({ children }: { children: ReactNode }) => ReactElement;
 type Login = (email: string, password: string) => Promise<User>;
 type Signup = (email: string, password: string) => Promise<User>;
 type ContextValue = {
   currentUser: User | null;
   login: Login;
-  // signup: Signup;
+  signup: Signup;
   logout: () => Promise<boolean>;
   // resetPassword: (email: string) => Promise<boolean>;
   // updateEmail: (email: string) => Promise<boolean> | null;
@@ -40,31 +40,66 @@ const AuthProvider: AuthProviderType = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setCurrentUser({
-      name: "Karuppusamy",
-      photoURL: "",
-    });
+  const initializeUser = async () => {
+    try {
+      const status = await db.initDB();
+      if (status) {
+        const user = await db.getUser();
+        setCurrentUser(user);
+      }
+    } catch (err: unknown) {
+      console.error(err);
+    }
     setLoading(false);
+  };
+
+  useEffect(() => {
+    initializeUser();
   }, []);
 
-  const login: Login = async () => {
-    const user = {
-      name: "Karuppusamy",
-      photoURL: "",
-    };
+  useEffect(() => {
+    if (currentUser) {
+      const decodedToken = decode(currentUser.access_token) as UserJWT;
+      if (Math.floor(Date.now() / 1000) >= decodedToken.exp) {
+        logout();
+      }
+    }
+  }, [currentUser]);
+
+  const login: Login = async (email, password) => {
+    const res: AxiosResponse<User> = await axios.post("/api/login", {
+      email,
+      password,
+    });
+    const user = res.data;
+    db.addUser(user);
+    setCurrentUser(user);
+    return user;
+  };
+
+  const signup: Login = async (email, password) => {
+    const res: AxiosResponse<User> = await axios.post("/api/signup", {
+      email,
+      password,
+    });
+    const user = res.data;
     setCurrentUser(user);
     return user;
   };
 
   const logout = async () => {
-    setCurrentUser(null);
-    return true;
+    const result = await db.deleteUser();
+    if (result) {
+      setCurrentUser(null);
+      return true;
+    }
+    return false;
   };
 
   const value = {
     currentUser,
     login,
+    signup,
     logout,
   };
 
