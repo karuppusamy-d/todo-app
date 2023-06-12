@@ -68,18 +68,19 @@ const MobileNav = (): ReactElement => {
             </Link>
           </div>
 
+          <div className="px-8 py-4">
+            <Link
+              href="/about"
+              className="text-base font-semibold tracking-wider"
+              onClick={onToggleNav}
+            >
+              About
+            </Link>
+          </div>
+
           {/* Show Dashboard and Logout only if user is logged in */}
           {currentUser ? (
             <>
-              <div className="px-8 py-4">
-                <Link
-                  href="/dashboard"
-                  className="text-base font-semibold tracking-wider"
-                  onClick={onToggleNav}
-                >
-                  Dashboard
-                </Link>
-              </div>
               <div className="px-8 py-4">
                 <button
                   onClick={() => {
@@ -94,15 +95,26 @@ const MobileNav = (): ReactElement => {
             </>
           ) : (
             // Show Login if user is not logged in
-            <div className="px-8 py-4">
-              <Link
-                href="/login"
-                className="text-base font-semibold tracking-wider"
-                onClick={onToggleNav}
-              >
-                Login
-              </Link>
-            </div>
+            <>
+              <div className="px-8 py-4">
+                <Link
+                  href="/login"
+                  className="text-base font-semibold tracking-wider"
+                  onClick={onToggleNav}
+                >
+                  Login
+                </Link>
+              </div>
+              <div className="px-8 py-4">
+                <Link
+                  href="/signup"
+                  className="text-base font-semibold tracking-wider"
+                  onClick={onToggleNav}
+                >
+                  Signup
+                </Link>
+              </div>
+            </>
           )}
         </div>
       </div>

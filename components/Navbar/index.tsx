@@ -23,17 +23,13 @@ const Navbar = (): ReactElement => {
               <Link href="/" className="px-1 md:px-4 font-semibold">
                 Home
               </Link>
+              <Link href="/about" className="px-1 md:px-4 font-semibold">
+                About
+              </Link>
 
               {/* Show Dashboard and Logout only if user is logged in */}
               {currentUser ? (
                 <>
-                  <Link
-                    href="/dashboard"
-                    className="px-1 md:px-4 font-semibold"
-                  >
-                    Dashboard
-                  </Link>
-
                   <button
                     onClick={logout}
                     className="px-1 md:px-4 font-semibold"
@@ -42,27 +38,16 @@ const Navbar = (): ReactElement => {
                   </button>
                 </>
               ) : (
-                <Link href="/login" className="px-1 md:px-4 font-semibold">
-                  Login
-                </Link>
+                <>
+                  <Link href="/login" className="px-1 md:px-4 font-semibold">
+                    Login
+                  </Link>
+                  <Link href="/signup" className="px-1 md:px-4 font-semibold">
+                    Signup
+                  </Link>
+                </>
               )}
             </div>
-
-            {/* Show profile photo if user is logged in */}
-            {currentUser && (
-              <Link
-                href="/profile"
-                className="w-8 h-8 p-1 ml-1 rounded focus:outline-none focus-visible:ring-2 focus:ring-gray-800 dark:focus:ring-gray-200"
-              >
-                <img
-                  alt="profile"
-                  src={currentUser.photoURL || "/images/profile.svg"}
-                  className={`object-cover h-full w-full rounded-full ${
-                    !currentUser.photoURL && "dark:invert"
-                  }`}
-                />
-              </Link>
-            )}
 
             {/* Theme switcher */}
             <ThemeSwitch />
