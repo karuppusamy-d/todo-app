@@ -3,6 +3,8 @@ export type User = {
   access_token: string;
 };
 
-export type JWTUser = {
+export type UserJWT = {
   uid: string;
+  iat: number;
+  exp: number;
 };

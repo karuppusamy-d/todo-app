@@ -9,3 +9,8 @@ export const loginSchema = z
     password: passwordSchema,
   })
   .strict();
+
+export const userSchema = z.object({
+  email: emailSchema,
+  access_token: z.string(),
+});
