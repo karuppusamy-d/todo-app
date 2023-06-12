@@ -1,4 +1,4 @@
-export type Todo = {
+export type SubTodo = {
   title: string;
   description: string;
   date: string;
@@ -6,10 +6,11 @@ export type Todo = {
   completed: boolean;
 };
 
-export type WithSubTodo = Todo & {
-  subTodos?: Todo[];
+export type Todo = SubTodo & {
+  subTodos?: SubTodo[];
 };
 
-export type Todos = {
-  [id: string]: WithSubTodo;
+export type TodoWithId = Todo & {
+  id: string;
+  uid: string;
 };
