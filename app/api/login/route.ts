@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     const user = await validateUserAccount(auth.email, auth.password);
     if (user) {
       const access_token = sign({ uid: user.localId }, JWT_SECRET, {
-        expiresIn: "24h",
+        expiresIn: "7d",
       });
       return NextResponse.json<User>({
         email: user.email,
