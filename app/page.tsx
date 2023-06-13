@@ -40,6 +40,14 @@ const Home = (): ReactElement => {
         {todos.map((todo, i) => {
           return <TodoCard key={i} todo={todo} />;
         })}
+
+        {todos.length <= 0 && (
+          <div className="rounded-lg shadow-light dark:shadow-card-dark p-8 sm:p-10">
+            <div className="flex items-start gap-3 justify-between flex-wrap">
+              <h2>No todos found</h2>
+            </div>
+          </div>
+        )}
       </div>
       {/* New projects popup */}
       <Popup showPopup={showNewTodo} togglePopup={toggleNewTodo}>
