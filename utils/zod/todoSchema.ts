@@ -7,10 +7,16 @@ export const subTodoSchema = z
     date: z.string(),
     important: z.boolean(),
     completed: z.boolean(),
+    id: z.string(),
   })
   .strict();
 
-export const todoSchema = subTodoSchema.extend({
+export const todoSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  date: z.string(),
+  important: z.boolean(),
+  completed: z.boolean(),
   subTodos: subTodoSchema.array().optional(),
 });
 

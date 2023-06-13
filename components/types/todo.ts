@@ -6,8 +6,10 @@ export type SubTodo = {
   completed: boolean;
 };
 
+export type SubTodoWithId = SubTodo & { id: string };
+
 export type Todo = SubTodo & {
-  subTodos?: SubTodo[];
+  subTodos?: SubTodoWithId[];
 };
 
 export type TodoWithId = Todo & {

@@ -9,7 +9,7 @@ import {
 } from "react";
 import { useAuthContext } from "@/components/contexts/useAuthContext";
 import { useTodoContext } from "../contexts/useTodoContext";
-import { SubTodo, TodoWithId } from "../types/todo";
+import { SubTodo, SubTodoWithId, TodoWithId } from "../types/todo";
 
 interface Props {
   togglePopup: () => void;
@@ -35,7 +35,9 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
     const description = descriptionRef.current.value;
 
     if (update && todoData) {
-      const res = await updateTodo({ ...todoData, title, description });
+      const res = await updateTodo({ ...todoData, title, description }).catch(
+        () => setError("Something went wrong")
+      );
       if (res === true) {
         togglePopup();
       }
@@ -43,11 +45,12 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
     }
 
     if (!update && todoData) {
-      const todo: SubTodo = {
+      const todo: SubTodoWithId = {
         title,
         description,
         completed: false,
         important: false,
+        id: Date.now().toString(),
         date: new Date().toString(),
       };
 
@@ -55,7 +58,9 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
         ...todoData,
         subTodos: todoData.subTodos ? [...todoData.subTodos, todo] : [todo],
       };
-      const res = await updateTodo(updatedTodo);
+      const res = await updateTodo(updatedTodo).catch(() =>
+        setError("Something went wrong")
+      );
       if (res === true) {
         togglePopup();
       }
@@ -69,7 +74,7 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
       important: false,
       date: new Date().toString(),
       subTodos: [],
-    });
+    }).catch(() => setError("Something went wrong"));
     if (res === true) {
       togglePopup();
       titleRef.current.value = "";
@@ -119,7 +124,6 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
         rows={4}
         maxLength={100}
         ref={descriptionRef}
-        required
       />
 
       {/* Error messages */}
