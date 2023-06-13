@@ -13,13 +13,18 @@ type Props = {
 
 const TodoCard = ({ todo, innerTodo, parrentTodo }: Props): ReactElement => {
   const { deleteTodo, updateTodo } = useTodoContext();
+  const [isRequestPending, setIsRequestPending] = useState<boolean>(false);
   const [popupType, setPopupType] = useState<"add" | "update">("add");
   const [showPopup, setShowPopup] = useState(false);
   const toggleUpdate = () => setShowPopup((curr) => !curr);
 
   const handleDelete = async () => {
+    if (isRequestPending) {
+      return;
+    }
+    setIsRequestPending(true);
     if (!innerTodo) {
-      deleteTodo(todo);
+      await deleteTodo(todo).catch(() => alert("Something went wrong"));
     } else if (parrentTodo) {
       let updatedTodo: TodoWithId = parrentTodo;
       updatedTodo.subTodos =
@@ -29,11 +34,16 @@ const TodoCard = ({ todo, innerTodo, parrentTodo }: Props): ReactElement => {
           }
           return true;
         }) || [];
-      await updateTodo(updatedTodo);
+      await updateTodo(updatedTodo).catch(() => alert("Something went wrong"));
     }
+    setIsRequestPending(false);
   };
 
   const handleUpdate = (type: "completed" | "important") => async () => {
+    if (isRequestPending) {
+      return;
+    }
+    setIsRequestPending(true);
     let updatedTodo: TodoWithId = todo;
     if (innerTodo && parrentTodo) {
       updatedTodo = parrentTodo;
@@ -51,7 +61,8 @@ const TodoCard = ({ todo, innerTodo, parrentTodo }: Props): ReactElement => {
       if (type === "important") updatedTodo.important = !updatedTodo.important;
     }
 
-    await updateTodo(updatedTodo);
+    await updateTodo(updatedTodo).catch(() => alert("Something went wrong"));
+    setIsRequestPending(false);
   };
 
   return (
@@ -118,7 +129,11 @@ const TodoCard = ({ todo, innerTodo, parrentTodo }: Props): ReactElement => {
               kind={todo.completed ? "completeFilled" : "complete"}
             />
           </button>
-          <button aria-label="Delete" title="Delete" onClick={handleDelete}>
+          <button
+            aria-label="Delete"
+            title="Delete"
+            onClick={() => handleDelete()}
+          >
             <Icon className="text-red-400" kind={"delete"} />
           </button>
         </div>

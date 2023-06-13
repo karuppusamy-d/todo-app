@@ -10,6 +10,7 @@ const Login = (): ReactElement => {
   const router = useRouter();
   const emailRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState({ type: "", message: "" });
+  const [isRequestPending, setIsRequestPending] = useState<boolean>(false);
   const { currentUser, resetPassword } = useAuthContext();
 
   useEffect(() => {
@@ -49,6 +50,10 @@ const Login = (): ReactElement => {
     if (!emailRef.current) return alert("Something went wrong");
 
     // Reset error
+    if (isRequestPending) {
+      return;
+    }
+    setIsRequestPending(true);
     setError({ type: "", message: "" });
 
     try {
@@ -67,6 +72,7 @@ const Login = (): ReactElement => {
       // Handle error
       handleAxiosError(err as AxiosError<ApiErrorResponse>);
     }
+    setIsRequestPending(false);
   }
 
   const handleAxiosError = (err: AxiosError<ApiErrorResponse>): void => {

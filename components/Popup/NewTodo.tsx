@@ -19,6 +19,7 @@ interface Props {
 
 const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
   const [error, setError] = useState("");
+  const [isRequestPending, setIsRequestPending] = useState<boolean>(false);
   const { currentUser } = useAuthContext();
   const { addTodo, updateTodo } = useTodoContext();
   const titleRef = useRef<HTMLInputElement>(null);
@@ -26,6 +27,9 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
 
   // Function to handle form submission
   async function handleSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
+    if (isRequestPending) {
+      return;
+    }
     setError("");
     e.preventDefault();
     if (!currentUser || !titleRef.current || !descriptionRef.current)
@@ -33,14 +37,17 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
 
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
+    setIsRequestPending(true);
 
     if (update && todoData) {
+      setIsRequestPending(true);
       const res = await updateTodo({ ...todoData, title, description }).catch(
         () => setError("Something went wrong")
       );
       if (res === true) {
         togglePopup();
       }
+      setIsRequestPending(false);
       return;
     }
 
@@ -53,7 +60,6 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
         id: Date.now().toString(),
         date: new Date().toString(),
       };
-
       const updatedTodo: TodoWithId = {
         ...todoData,
         subTodos: todoData.subTodos ? [...todoData.subTodos, todo] : [todo],
@@ -64,6 +70,7 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
       if (res === true) {
         togglePopup();
       }
+      setIsRequestPending(false);
       return;
     }
 
@@ -80,6 +87,7 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
       titleRef.current.value = "";
       descriptionRef.current.value = "";
     }
+    setIsRequestPending(false);
   }
 
   useEffect(() => {

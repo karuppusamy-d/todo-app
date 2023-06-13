@@ -11,6 +11,7 @@ const Signup = (): ReactElement => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
+  const [isRequestPending, setIsRequestPending] = useState<boolean>(false);
   const [error, setError] = useState({ type: "", message: "" });
   const { currentUser, signup } = useAuthContext();
 
@@ -54,6 +55,10 @@ const Signup = (): ReactElement => {
       return alert("Something went wrong");
 
     // Reset error
+    if (isRequestPending) {
+      return;
+    }
+    setIsRequestPending(true);
     setError({ type: "", message: "" });
 
     try {
@@ -63,17 +68,21 @@ const Signup = (): ReactElement => {
       const passwordConfirm = passwordConfirmRef.current.value;
 
       // Check if password and passwordConfirm are equal
-      if (password !== passwordConfirm)
+      if (password !== passwordConfirm) {
+        setIsRequestPending(false);
         return handleError(
           passwordConfirmRef.current,
           "Passwords didn’t match"
         );
+      }
 
       // Signup with email and password
       await signup(email, password);
     } catch (err) {
       // Handle error
       handleAxiosError(err as AxiosError<ApiErrorResponse>);
+    } finally {
+      setIsRequestPending(false);
     }
   }
 
