@@ -58,7 +58,7 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
         completed: false,
         important: false,
         id: Date.now().toString(),
-        date: new Date().toString(),
+        date: Date.now(),
       };
       const updatedTodo: TodoWithId = {
         ...todoData,
@@ -79,7 +79,7 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
       description,
       completed: false,
       important: false,
-      date: new Date().toString(),
+      date: Date.now(),
       subTodos: [],
     }).catch(() => setError("Something went wrong"));
     if (res === true) {

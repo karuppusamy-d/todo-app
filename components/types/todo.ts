@@ -1,7 +1,7 @@
 export type SubTodo = {
   title: string;
   description: string;
-  date: string;
+  date: number;
   important: boolean;
   completed: boolean;
 };

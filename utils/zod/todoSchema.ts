@@ -4,7 +4,7 @@ export const subTodoSchema = z
   .object({
     title: z.string().min(1).max(25),
     description: z.string().max(100),
-    date: z.string(),
+    date: z.number(),
     important: z.boolean(),
     completed: z.boolean(),
     id: z.string(),
@@ -14,7 +14,7 @@ export const subTodoSchema = z
 export const todoSchema = z.object({
   title: z.string().min(1).max(25),
   description: z.string().max(100),
-  date: z.string(),
+  date: z.number(),
   important: z.boolean(),
   completed: z.boolean(),
   subTodos: subTodoSchema.array().optional(),

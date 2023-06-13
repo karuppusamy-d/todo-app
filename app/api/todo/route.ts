@@ -42,7 +42,7 @@ export async function PUT(request: Request) {
     try {
       const todo = todoSchema.parse(await request.json());
       try {
-        const id = user.uid.slice(0, 6) + "_" + Date.now();
+        const id = user.uid + "_" + Date.now();
         const todoWithId: TodoWithId = { ...todo, id, uid: user.uid };
 
         await addTodo(todoWithId);
@@ -67,7 +67,7 @@ export async function PATCH(request: Request) {
     const user = getCurrentUser(request);
     try {
       const todo = todoWithIdSchema.parse(await request.json());
-      if (todo.uid !== user.uid) {
+      if (todo.uid !== user.uid || todo.id.split("_")[0] !== user.uid) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
       try {
@@ -94,13 +94,9 @@ export async function DELETE(request: Request) {
     try {
       const id = z.string().parse(request.headers.get("id"));
       try {
-        const doc = await getTodo(id);
-        if (doc.exists) {
-          const todo = doc.data();
-          if (todo?.uid === user.uid) {
-            await deleteTodo(todo.id);
-            return NextResponse.json({ id }, { status: 200 });
-          }
+        if (id.split("_")[0] === user.uid) {
+          await deleteTodo(id);
+          return NextResponse.json({ id }, { status: 200 });
         }
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       } catch (err: any) {
@@ -117,6 +113,7 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 }
+
 function getCurrentUser(request: Request) {
   const authorization = request.headers.get("authorization") || "";
   const token = authorization.split(" ")[1];
