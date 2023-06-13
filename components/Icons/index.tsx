@@ -2,6 +2,8 @@ import { DetailedHTMLProps, HTMLAttributes, ReactElement } from "react";
 import downArrow from "./dropdown-arrow.svg";
 import close from "./close.svg";
 import remove from "./remove.svg";
+import add from "./add.svg";
+import edit from "./edit.svg";
 import star from "./star.svg";
 import starFilled from "./star-filled.svg";
 import complete from "./complete.svg";
@@ -11,6 +13,8 @@ const components = {
   downArrow: downArrow,
   close: close,
   delete: remove,
+  add: add,
+  edit: edit,
   star: star,
   starFilled: starFilled,
   complete: complete,

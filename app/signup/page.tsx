@@ -109,7 +109,7 @@ const Signup = (): ReactElement => {
           </h2>
 
           {/* Email Input */}
-          <label className="font-semibold text-xs" htmlFor="email">
+          <label className="font-semibold text-xs mb-2" htmlFor="email">
             Email
           </label>
           <input
@@ -129,7 +129,7 @@ const Signup = (): ReactElement => {
           )}
 
           {/* Password Input */}
-          <label className="font-semibold text-xs mt-6" htmlFor="password">
+          <label className="font-semibold text-xs mt-4 mb-2" htmlFor="password">
             Password
           </label>
           <input
@@ -150,7 +150,7 @@ const Signup = (): ReactElement => {
           )}
           {/* Password Confirm Input */}
           <label
-            className="font-semibold text-xs mt-6"
+            className="font-semibold text-xs mt-4 mb-2"
             htmlFor="passwordConfirm"
           >
             Password Confirm

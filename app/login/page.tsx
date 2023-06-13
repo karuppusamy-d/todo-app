@@ -90,7 +90,7 @@ const Login = (): ReactElement => {
           </h2>
 
           {/* Email Input */}
-          <label className="font-semibold text-xs" htmlFor="email">
+          <label className="font-semibold text-xs mb-2" htmlFor="email">
             Email
           </label>
           <input
@@ -110,7 +110,7 @@ const Login = (): ReactElement => {
           )}
 
           {/* Password Input */}
-          <label className="font-semibold text-xs mt-6" htmlFor="password">
+          <label className="font-semibold text-xs mt-4 mb-2" htmlFor="password">
             Password
           </label>
           <input

@@ -3,20 +3,24 @@ import {
   FormEvent,
   ReactElement,
   SetStateAction,
+  useEffect,
   useRef,
   useState,
 } from "react";
 import { useAuthContext } from "@/components/contexts/useAuthContext";
 import { useTodoContext } from "../contexts/useTodoContext";
+import { SubTodo, TodoWithId } from "../types/todo";
 
 interface Props {
   togglePopup: () => void;
+  update?: boolean;
+  todoData?: TodoWithId;
 }
 
-const NewTodo = ({ togglePopup }: Props): ReactElement => {
+const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
   const [error, setError] = useState("");
   const { currentUser } = useAuthContext();
-  const { addTodo } = useTodoContext();
+  const { addTodo, updateTodo } = useTodoContext();
   const titleRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
@@ -30,12 +34,40 @@ const NewTodo = ({ togglePopup }: Props): ReactElement => {
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
 
+    if (update && todoData) {
+      const res = await updateTodo({ ...todoData, title, description });
+      if (res === true) {
+        togglePopup();
+      }
+      return;
+    }
+
+    if (!update && todoData) {
+      const todo: SubTodo = {
+        title,
+        description,
+        completed: false,
+        important: false,
+        date: new Date().toString(),
+      };
+
+      const updatedTodo: TodoWithId = {
+        ...todoData,
+        subTodos: todoData.subTodos ? [...todoData.subTodos, todo] : [todo],
+      };
+      const res = await updateTodo(updatedTodo);
+      if (res === true) {
+        togglePopup();
+      }
+      return;
+    }
+
     const res = await addTodo({
       title,
       description,
       completed: false,
-      date: new Date().toString(),
       important: false,
+      date: new Date().toString(),
       subTodos: [],
     });
     if (res === true) {
@@ -45,13 +77,23 @@ const NewTodo = ({ togglePopup }: Props): ReactElement => {
     }
   }
 
+  useEffect(() => {
+    if (update) {
+      if (!currentUser || !titleRef.current || !descriptionRef.current)
+        return setError("Something went wrong");
+
+      titleRef.current.value = todoData?.title || "";
+      descriptionRef.current.value = todoData?.description || "";
+    }
+  }, [update, currentUser, todoData?.title, todoData?.description]);
+
   return (
     <form
       className="flex flex-col sm:w-96 mb-[4.5rem] sm:mb-6"
       onSubmit={handleSubmit}
     >
       <h2 className="text-primary-400 dark:text-gray-100 text-center text-3xl font-bold mb-8">
-        Add Todo
+        {update ? "Update Todo" : "Add Todo"}
       </h2>
 
       {/* Input for name */}
@@ -98,7 +140,7 @@ const NewTodo = ({ togglePopup }: Props): ReactElement => {
 
         {/* Submit button */}
         <button className="btn h-10 rounded-lg w-full" type="submit">
-          Add
+          {update ? "Update" : "Add"}
         </button>
       </div>
     </form>

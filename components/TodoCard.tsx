@@ -2,6 +2,8 @@ import React, { ReactElement, useState } from "react";
 import { TodoWithId } from "./types/todo";
 import Icon from "./Icons";
 import { useTodoContext } from "./contexts/useTodoContext";
+import Popup from "./Popup";
+import NewTodo from "./Popup/NewTodo";
 
 type Props = {
   todo: TodoWithId;
@@ -10,6 +12,10 @@ type Props = {
 
 const TodoCard = ({ todo, innerTodo }: Props): ReactElement => {
   const { deleteTodo } = useTodoContext();
+  const [popupType, setPopupType] = useState<"add" | "update">("add");
+  const [showPopup, setShowPopup] = useState(false);
+  const toggleUpdate = () => setShowPopup((curr) => !curr);
+
   const handleDelete = () => {
     if (!innerTodo) deleteTodo(todo);
   };
@@ -36,6 +42,30 @@ const TodoCard = ({ todo, innerTodo }: Props): ReactElement => {
               kind={todo.important ? "starFilled" : "star"}
             />
           </button>
+          {!innerTodo && (
+            <>
+              <button
+                aria-label="add"
+                title="add inner todo"
+                onClick={() => {
+                  setPopupType("add");
+                  setShowPopup(true);
+                }}
+              >
+                <Icon kind={"add"} />
+              </button>
+              <button
+                aria-label="edit"
+                title="edit"
+                onClick={() => {
+                  setPopupType("update");
+                  setShowPopup(true);
+                }}
+              >
+                <Icon kind={"edit"} />
+              </button>
+            </>
+          )}
           <button aria-label="delete" title="delete" onClick={handleDelete}>
             <Icon className="text-red-400" kind={"delete"} />
           </button>
@@ -58,6 +88,17 @@ const TodoCard = ({ todo, innerTodo }: Props): ReactElement => {
             );
           })}
         </div>
+      )}
+
+      {/* Update projects popup */}
+      {showPopup && (
+        <Popup showPopup={showPopup} togglePopup={toggleUpdate}>
+          <NewTodo
+            togglePopup={toggleUpdate}
+            update={popupType == "update"}
+            todoData={todo}
+          />
+        </Popup>
       )}
     </div>
   );
