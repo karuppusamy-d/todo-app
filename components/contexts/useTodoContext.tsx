@@ -36,17 +36,18 @@ const useTodoContext = (): ContextValue => {
 // Create the provider
 const TodoProvider: TodoProviderType = ({ children }) => {
   const [todos, setTodos] = useState<TodoWithId[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const { currentUser } = useAuthContext();
 
   useEffect(() => {
+    setTodos([]);
     refreshTodos();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   const refreshTodos = async () => {
     if (currentUser?.access_token) {
-      setLoading(false);
+      setLoading(true);
       axios
         .get<TodoWithId[]>("/api/todo", {
           headers: {
@@ -57,7 +58,7 @@ const TodoProvider: TodoProviderType = ({ children }) => {
           setTodos(data);
         })
         .finally(() => {
-          setLoading(true);
+          setLoading(false);
         });
     }
   };
