@@ -100,7 +100,6 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
       <h2 className="text-primary-400 dark:text-gray-100 text-center text-3xl font-bold mb-8">
         {update ? "Update Todo" : "Add Todo"}
       </h2>
-
       {/* Input for name */}
       <label className="font-semibold text-sm mb-2" htmlFor="title">
         Title
@@ -110,10 +109,9 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
         id="title"
         ref={titleRef}
         type="text"
-        maxLength={50}
+        maxLength={25}
         required
       />
-
       {/* Input for description */}
       <label className="font-semibold text-sm mt-4 mb-2" htmlFor="description">
         Description
@@ -125,14 +123,12 @@ const NewTodo = ({ togglePopup, update, todoData }: Props): ReactElement => {
         maxLength={100}
         ref={descriptionRef}
       />
-
       {/* Error messages */}
       {error && (
         <div className="mt-3 text-sm font-medium text-red-500 dark:text-red-400">
           {error}
         </div>
       )}
-
       <div className="flex gap-2 mt-8">
         {/* Cancel button */}
         <button

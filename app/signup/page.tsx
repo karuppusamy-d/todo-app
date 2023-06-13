@@ -101,7 +101,7 @@ const Signup = (): ReactElement => {
 
   return (
     <div className="py-20 min-h-[80vh]">
-      <div className="p-8 sm:p-14 max-w-md sm:max-w-md m-auto rounded-lg shadow-light dark:shadow-cardDark">
+      <div className="p-8 sm:p-14 max-w-md sm:max-w-lg m-auto rounded-lg shadow-light dark:shadow-card-dark">
         {/* Signup form */}
         <form className="flex flex-col" onSubmit={handleSignup}>
           <h2 className="text-primary-400 dark:text-gray-100 text-center text-3xl font-bold mb-8">
@@ -181,7 +181,7 @@ const Signup = (): ReactElement => {
         <div className="flex mt-6 justify-center text-xs">
           {/* Link to forgot password page */}
           <Link
-            href="/forgot_password"
+            href="/reset-password"
             className="text-primary-400 hover:text-primary-500"
           >
             Forgot Password
@@ -189,10 +189,10 @@ const Signup = (): ReactElement => {
           <span className="mx-2 text-gray-300 dark:text-gray-400">/</span>
           {/* Link to signup page */}
           <Link
-            href="/signup"
+            href="/login"
             className="text-primary-400 hover:text-primary-500"
           >
-            Sign Up
+            Login
           </Link>
         </div>
       </div>

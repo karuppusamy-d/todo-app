@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const subTodoSchema = z
   .object({
-    title: z.string(),
-    description: z.string(),
+    title: z.string().min(1).max(25),
+    description: z.string().max(100),
     date: z.string(),
     important: z.boolean(),
     completed: z.boolean(),
@@ -12,8 +12,8 @@ export const subTodoSchema = z
   .strict();
 
 export const todoSchema = z.object({
-  title: z.string(),
-  description: z.string(),
+  title: z.string().min(1).max(25),
+  description: z.string().max(100),
   date: z.string(),
   important: z.boolean(),
   completed: z.boolean(),

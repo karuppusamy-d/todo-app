@@ -56,50 +56,28 @@ const TodoCard = ({ todo, innerTodo, parrentTodo }: Props): ReactElement => {
 
   return (
     <div
-      className={`rounded-lg shadow-light dark:shadow-cardDark ${
-        innerTodo ? "p-6" : "p-10"
+      className={`rounded-lg shadow-light dark:shadow-card-dark ${
+        innerTodo ? "p-6" : "p-8 sm:p-10"
       }`}
     >
-      <div className="flex items-center gap-3 mb-2">
-        <h2 className={`font-bold ${innerTodo ? "text-lg" : "text-2xl"}`}>
+      <div className="flex items-start gap-3 justify-between flex-wrap">
+        <h2
+          className={`font-bold break-words ${
+            innerTodo ? "text-lg" : "text-xl sm:text-2xl"
+          }`}
+        >
           {todo.title}
         </h2>
-        <div className="text-lg flex items-center gap-2">
-          <button
-            aria-label="completed"
-            title="completed"
-            onClick={handleUpdate("completed")}
-          >
-            <Icon
-              className="text-green-300"
-              kind={todo.completed ? "completeFilled" : "complete"}
-            />
-          </button>
-          <button
-            aria-label="important"
-            title="important"
-            onClick={handleUpdate("important")}
-          >
-            <Icon
-              className="text-amber-300"
-              kind={todo.important ? "starFilled" : "star"}
-            />
-          </button>
+        <div
+          className={`flex items-start gap-3 ${
+            innerTodo ? "text-lg" : "text-xl"
+          }`}
+        >
           {!innerTodo && (
             <>
               <button
-                aria-label="add"
-                title="add inner todo"
-                onClick={() => {
-                  setPopupType("add");
-                  setShowPopup(true);
-                }}
-              >
-                <Icon kind={"add"} />
-              </button>
-              <button
-                aria-label="edit"
-                title="edit"
+                aria-label="Edit"
+                title="Edit"
                 onClick={() => {
                   setPopupType("update");
                   setShowPopup(true);
@@ -107,17 +85,50 @@ const TodoCard = ({ todo, innerTodo, parrentTodo }: Props): ReactElement => {
               >
                 <Icon kind={"edit"} />
               </button>
+              <button
+                aria-label="Add Todo"
+                title="Add Todo"
+                onClick={() => {
+                  setPopupType("add");
+                  setShowPopup(true);
+                }}
+              >
+                <Icon kind={"add"} />
+              </button>
             </>
           )}
-          <button aria-label="delete" title="delete" onClick={handleDelete}>
+          <button
+            aria-label="Important"
+            title="Important"
+            onClick={handleUpdate("important")}
+          >
+            <Icon
+              className="text-amber-300"
+              kind={todo.important ? "starFilled" : "star"}
+            />
+          </button>
+
+          <button
+            aria-label="Completed"
+            title="Completed"
+            onClick={handleUpdate("completed")}
+          >
+            <Icon
+              className="text-green-300"
+              kind={todo.completed ? "completeFilled" : "complete"}
+            />
+          </button>
+          <button aria-label="Delete" title="Delete" onClick={handleDelete}>
             <Icon className="text-red-400" kind={"delete"} />
           </button>
         </div>
       </div>
 
-      <div className="text-sm text-gray-700 dark:text-gray-300">
-        {todo.description}
-      </div>
+      {todo.description && (
+        <div className="text-sm text-gray-700 break-words dark:text-gray-300 mt-2">
+          {todo.description}
+        </div>
+      )}
 
       {!innerTodo && todo.subTodos && todo.subTodos?.length > 0 && (
         <div className="flex flex-col gap-4 pt-6">

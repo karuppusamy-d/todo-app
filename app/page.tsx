@@ -26,9 +26,9 @@ const Home = (): ReactElement => {
   if (loading) return <Loading />;
 
   return (
-    <div className="min-h-screen p-4 sm:p-8">
-      <div className="grid gap-8">
-        <div className="flex items-center justify-between px-4">
+    <div className="min-h-screen py-4 px-2 xs:px-4 pb-8 md:px-8 sm:py-8">
+      <div className="flex flex-col gap-8">
+        <div className="flex items-center justify-between px-4 grid-cols-1">
           <h2 className="text-2xl font-bold">All Todos</h2>
           <button
             className="btn"
