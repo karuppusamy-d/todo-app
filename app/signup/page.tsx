@@ -181,7 +181,7 @@ const Signup = (): ReactElement => {
         <div className="flex mt-6 justify-center text-xs">
           {/* Link to forgot password page */}
           <Link
-            href="/reset-password"
+            href="/resetPassword"
             className="text-primary-400 hover:text-primary-500"
           >
             Forgot Password

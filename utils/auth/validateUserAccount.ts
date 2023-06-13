@@ -20,7 +20,7 @@ export const validateUserAccount = async (
   const apiKey = process.env.FIREBASE_API_KEY;
 
   // https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=
-  const verifyPasswordUrl = `${process.env.FIREBASE_IDENTITY_BASE_URL}signInWithPassword?key=${apiKey}`;
+  const verifyPasswordUrl = `${process.env.FIREBASE_IDENTITY_BASE_URL}:signInWithPassword?key=${apiKey}`;
 
   if (!verifyPasswordUrl?.length || !apiKey?.length) return null;
 

@@ -21,7 +21,7 @@ type ContextValue = {
   login: Login;
   signup: Signup;
   logout: () => Promise<boolean>;
-  // resetPassword: (email: string) => Promise<boolean>;
+  resetPassword: (email: string) => Promise<boolean>;
   // updateEmail: (email: string) => Promise<boolean> | null;
   // updatePassword: (password: string) => Promise<boolean> | null;
   // verifyEmail: () => Promise<boolean> | null;
@@ -87,6 +87,17 @@ const AuthProvider: AuthProviderType = ({ children }) => {
     return user;
   };
 
+  const resetPassword = async (email: string): Promise<boolean> => {
+    const res: AxiosResponse<{ email: string }> = await axios.post(
+      "/api/resetPassword",
+      {
+        email,
+      }
+    );
+    const result = res.data.email === email;
+    return result;
+  };
+
   const logout = async () => {
     const result = await db.deleteUser();
     if (result) {
@@ -100,6 +111,7 @@ const AuthProvider: AuthProviderType = ({ children }) => {
     currentUser,
     login,
     signup,
+    resetPassword,
     logout,
   };
 

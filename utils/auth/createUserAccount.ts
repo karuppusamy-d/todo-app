@@ -18,7 +18,7 @@ export const createUserAccount = async (
   const apiKey = process.env.FIREBASE_API_KEY;
 
   // https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=
-  const signupUrl = `${process.env.FIREBASE_IDENTITY_BASE_URL}signUp?key=${apiKey}`;
+  const signupUrl = `${process.env.FIREBASE_IDENTITY_BASE_URL}:signUp?key=${apiKey}`;
 
   if (!signupUrl?.length || !apiKey?.length) return null;
 

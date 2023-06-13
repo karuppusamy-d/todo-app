@@ -9,9 +9,8 @@ import { ApiErrorResponse } from "@/components/types/ApiErrorResponse";
 const Login = (): ReactElement => {
   const router = useRouter();
   const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState({ type: "", message: "" });
-  const { currentUser, login } = useAuthContext();
+  const { currentUser, resetPassword } = useAuthContext();
 
   useEffect(() => {
     // Redirect if user is already logged in
@@ -37,16 +36,17 @@ const Login = (): ReactElement => {
     // Focus on the element
     ele.focus();
     // Set error message
-    setError({ type: ele.id, message });
+    setError({ type: "error", message });
   };
 
   // Function to handle login form submit
-  async function handleLogin(e: FormEvent<HTMLFormElement>): Promise<void> {
+  async function handleResetPassword(
+    e: FormEvent<HTMLFormElement>
+  ): Promise<void> {
     e.preventDefault();
 
     // Check if email and password are not empty
-    if (!emailRef.current || !passwordRef.current)
-      return alert("Something went wrong");
+    if (!emailRef.current) return alert("Something went wrong");
 
     // Reset error
     setError({ type: "", message: "" });
@@ -54,10 +54,15 @@ const Login = (): ReactElement => {
     try {
       // Get email and password
       const email = emailRef.current.value;
-      const password = passwordRef.current.value;
 
       // Login with email and password
-      await login(email, password);
+      const res = await resetPassword(email);
+      if (res) {
+        setError({
+          type: "success",
+          message: "Please check your email to reset password.",
+        });
+      }
     } catch (err) {
       // Handle error
       handleAxiosError(err as AxiosError<ApiErrorResponse>);
@@ -65,28 +70,22 @@ const Login = (): ReactElement => {
   }
 
   const handleAxiosError = (err: AxiosError<ApiErrorResponse>): void => {
-    if (!emailRef.current || !passwordRef.current)
-      return alert("Something went wrong");
+    if (!emailRef.current) return alert("Something went wrong");
 
     const response = err.response?.data;
-
     if (response) {
       const error = response.errors[0];
-      if (error.path == "email") {
-        handleError(emailRef.current, error.message);
-      } else {
-        handleError(passwordRef.current, error.message);
-      }
+      handleError(emailRef.current, error.message);
     }
   };
 
   return (
     <div className="py-20 min-h-[80vh]">
-      <div className="p-8 sm:p-14 max-w-md m-auto rounded-lg shadow-light dark:shadow-card-dark">
+      <div className="p-8 sm:p-14 max-w-md sm:max-w-md m-auto rounded-lg shadow-light dark:shadow-card-dark">
         {/* Login form */}
-        <form className="flex flex-col" onSubmit={handleLogin}>
+        <form className="flex flex-col" onSubmit={handleResetPassword}>
           <h2 className="text-primary-400 dark:text-gray-100 text-center text-3xl font-bold mb-8">
-            Login
+            Reset Password
           </h2>
 
           {/* Email Input */}
@@ -103,46 +102,31 @@ const Login = (): ReactElement => {
           />
 
           {/* Email error message */}
-          {error.type == "email" && (
-            <div className="mt-3 text-xs font-medium text-red-500 dark:text-red-400">
-              {error.message}
-            </div>
-          )}
-
-          {/* Password Input */}
-          <label className="font-semibold text-xs mt-4 mb-2" htmlFor="password">
-            Password
-          </label>
-          <input
-            className="input"
-            id="password"
-            ref={passwordRef}
-            type="password"
-            autoComplete="current-password"
-            required
-            minLength={8}
-          />
-
-          {/* Password error message */}
-          {error.type == "password" && (
-            <div className="mt-3 text-xs font-medium text-red-500 dark:text-red-400">
+          {error.type.length > 0 && (
+            <div
+              className={`mt-3 text-xs font-medium ${
+                error.type == "success"
+                  ? "text-green-500 dark:text-green-400"
+                  : "text-red-500 dark:text-red-400"
+              }`}
+            >
               {error.message}
             </div>
           )}
 
           {/* Login Button */}
           <button className="btn h-10 mt-8 rounded" type="submit">
-            Login
+            Reset Password
           </button>
         </form>
 
         <div className="flex mt-6 justify-center text-xs">
           {/* Link to forgot password page */}
           <Link
-            href="/resetPassword"
+            href="/login"
             className="text-primary-400 hover:text-primary-500"
           >
-            Forgot Password
+            Login
           </Link>
           <span className="mx-2 text-gray-300 dark:text-gray-400">/</span>
           {/* Link to signup page */}
